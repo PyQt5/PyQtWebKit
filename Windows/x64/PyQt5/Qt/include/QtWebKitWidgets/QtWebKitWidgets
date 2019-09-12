@@ -1,0 +1,11 @@
+// convenience header
+#ifndef QT_QTWEBKITWIDGETS_MODULE_H
+#define QT_QTWEBKITWIDGETS_MODULE_H
+#include <QtWebKitWidgets/QtWebKitWidgetsDepends>
+#include "qtwebkitwidgetsversion.h"
+#include "qgraphicswebview.h"
+#include "qwebframe.h"
+#include "qwebinspector.h"
+#include "qwebpage.h"
+#include "qwebview.h"
+#endif

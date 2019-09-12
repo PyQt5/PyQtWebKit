@@ -1,0 +1,16 @@
+// convenience header
+#ifndef QT_QTWEBKIT_MODULE_H
+#define QT_QTWEBKIT_MODULE_H
+#include <QtWebKit/QtWebKitDepends>
+#include "qwebkitglobal.h"
+#include "qtwebkitversion.h"
+#include "qwebdatabase.h"
+#include "qwebelement.h"
+#include "qwebfullscreenrequest.h"
+#include "qwebhistory.h"
+#include "qwebhistoryinterface.h"
+#include "qwebkitplatformplugin.h"
+#include "qwebpluginfactory.h"
+#include "qwebsecurityorigin.h"
+#include "qwebsettings.h"
+#endif

@@ -1,0 +1,79 @@
+version: 5.13.0.{build}
+skip_non_tags: true
+cache:
+  - Windows
+  - Linux
+  - tools
+  - src -> PyQt5_gpl-5.13.0.tar.gz, sip-4.19.18.tar.gz
+environment:
+  matrix:
+  - PYTHON: C:\Python35
+    VERSION: 5.13.0
+    PLATFORM: x86
+    DISTUTILS_USE_SDK: 1
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
+    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - PYTHON: C:\Python35-x64
+    VERSION: 5.13.0
+    PLATFORM: x64
+    DISTUTILS_USE_SDK: 1
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017_64"
+    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - PYTHON: C:\Python36
+    VERSION: 5.13.0
+    PLATFORM: x86
+    DISTUTILS_USE_SDK: 1
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
+    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - PYTHON: C:\Python36-x64
+    VERSION: 5.13.0
+    PLATFORM: x64
+    DISTUTILS_USE_SDK: 1
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017_64"
+    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - PYTHON: C:\Python37
+    VERSION: 5.13.0
+    PLATFORM: x86
+    DISTUTILS_USE_SDK: 1
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
+    PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - PYTHON: C:\Python37-x64
+    VERSION: 5.13.0
+    PLATFORM: x64
+    DISTUTILS_USE_SDK: 1
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017_64\\"
+    PATH: "%QTDIR%bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+build_script:
+- cmd: >-
+    "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %PLATFORM%
+
+    python  --version
+
+    python -m pip install twine -U
+
+    xcopy "Windows\%PLATFORM%\PyQt5\Qt\*" %QTDIR% /S /E /Y /D
+
+    echo "python build.py --platform=Windows --arch=%PLATFORM% --build=sip"
+
+    python build.py --platform=Windows --arch=%PLATFORM% --build=sip
+
+    echo "python build.py --platform=Windows --arch=%PLATFORM% --build=PyQt5"
+
+    python build.py --platform=Windows --arch=%PLATFORM% --build=PyQt5
+test_script:
+- cmd: >-
+    echo "python mkdist.py --platform=Windows --arch=%PLATFORM% --version=%VERSION%"
+
+    python mkdist.py --platform=Windows --arch=%PLATFORM% --version=%VERSION%
+
+    echo "python test.py --platform=Windows --arch=%PLATFORM% --version=%VERSION%"
+
+    python test.py --platform=Windows --arch=%PLATFORM% --version=%VERSION%
+
+    python -m twine upload dist/* -u Irony -p %PYPIPASSORD%
