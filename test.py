@@ -35,6 +35,8 @@ parser.add_argument('-a', '--arch', default=None, type=str.lower,
                     required=True, help='System Arch')
 parser.add_argument('-v', '--version', default=None, type=str.lower,
                     required=True, help='PyQt5 Version')
+parser.add_argument('-t', '--tags', default=['cp35', 'cp36', 'cp37', 'cp38'], nargs='+',
+                    metavar='cp35 cp36 cp37 cp38', help='Python version')
 
 args = parser.parse_args()
 
@@ -44,16 +46,17 @@ print('Arch:', args.arch)
 print('Version:', args.version)
 Name = 'PyQtWebKit'
 print('Name:', Name)
+print(args.tags)
+Tags = '.'.join(args.tags)
+print('Tags:', Tags)
 
 if args.platform == 'Windows':
-    Tag = 'cp35.cp36.cp37.cp38-none{0}'.format(
+    Tag = '{0}-none{1}'.format(Tags, 
         '-win32' if args.arch == 'x86' else '-win_amd64' if args.arch == 'x64' else '')
 elif args.platform == 'Linux':
-    Tag = 'cp35.cp36.cp37.cp38-abi3-manylinux1_x86_64'
+    Tag = '{0}-abi3-manylinux1_x86_64'.format(Tags)
 else:
-    Tag = 'cp35.cp36.cp37.cp38-none'
-print('Tag:', Tag)
-
+    Tag = '{0}-none'.format(Tags)
 
 _main(['install', os.path.abspath(
     'dist/{0}-{1}-{2}.whl'.format(Name, args.version, Tag))])
