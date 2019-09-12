@@ -8,6 +8,7 @@ cache:
 environment:
   matrix:
   - PYTHON: C:\Python35
+    TAG: cp35
     VERSION: 5.13.0
     PLATFORM: x86
     DISTUTILS_USE_SDK: 1
@@ -15,6 +16,7 @@ environment:
     QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python35-x64
+    TAG: cp35
     VERSION: 5.13.0
     PLATFORM: x64
     DISTUTILS_USE_SDK: 1
@@ -22,6 +24,7 @@ environment:
     QTDIR: "C:\\Qt\\%VERSION%\\msvc2017_64"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python36
+    TAG: cp36
     VERSION: 5.13.0
     PLATFORM: x86
     DISTUTILS_USE_SDK: 1
@@ -30,12 +33,14 @@ environment:
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python36-x64
     VERSION: 5.13.0
+    TAG: cp36
     PLATFORM: x64
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     QTDIR: "C:\\Qt\\%VERSION%\\msvc2017_64"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python37
+    TAG: cp37
     VERSION: 5.13.0
     PLATFORM: x86
     DISTUTILS_USE_SDK: 1
@@ -43,6 +48,7 @@ environment:
     QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python37-x64
+    TAG: cp37
     VERSION: 5.13.0
     PLATFORM: x64
     DISTUTILS_USE_SDK: 1
@@ -68,12 +74,12 @@ build_script:
     python build.py --platform=Windows --arch=%PLATFORM% --build=PyQt5
 test_script:
 - cmd: >-
-    echo "python mkdist.py --platform=Windows --arch=%PLATFORM% --version=%VERSION%"
+    echo "python mkdist.py --platform=Windows --arch=%PLATFORM% --version=%VERSION% --tags=%TAG%"
 
-    python mkdist.py --platform=Windows --arch=%PLATFORM% --version=%VERSION%
+    python mkdist.py --platform=Windows --arch=%PLATFORM% --version=%VERSION% --tags=%TAG%
 
-    echo "python test.py --platform=Windows --arch=%PLATFORM% --version=%VERSION%"
+    echo "python test.py --platform=Windows --arch=%PLATFORM% --version=%VERSION% --tags=%TAG%"
 
-    python test.py --platform=Windows --arch=%PLATFORM% --version=%VERSION%
+    python test.py --platform=Windows --arch=%PLATFORM% --version=%VERSION% --tags=%TAG%
 
     python -m twine upload dist/* -u %PYPIUSER% -p %PYPIPASSORD%
