@@ -76,4 +76,4 @@ test_script:
 
     python test.py --platform=Windows --arch=%PLATFORM% --version=%VERSION%
 
-    python -m twine upload dist/* -u Irony -p %PYPIPASSORD%
+    python -m twine upload dist/* -u %PYPIUSER% -p %PYPIPASSORD%
