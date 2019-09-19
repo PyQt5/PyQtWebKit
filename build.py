@@ -34,7 +34,7 @@ parser.add_argument('-b', '--build', default=None,
                     metavar='[sip or PyQt5]',
                     required=True, help='Build Target')
 parser.add_argument('--qmake', default='', help='qmake tools')
-parser.add_argument('--sudo', default=False, type=bool, help='sudo')
+parser.add_argument('--delete', default='True', type=str, help='Delete src files')
 
 args = parser.parse_args()
 
@@ -48,20 +48,20 @@ if args.platform == 'Windows':
 print('Make:', make)
 print('Build:', args.build)
 print('Qmake:', args.qmake)
-print('Sudo:', args.sudo)
-
+print('Del:', args.delete)
 
 def buildSip():
     # 编译sip
-    try:
-        shutil.rmtree('sip-4.19.18', ignore_errors=True)
-    except Exception as e:
-        print('remove sip', e)
+    if args.delete:
+        try:
+            shutil.rmtree('sip-4.19.18', ignore_errors=True)
+        except Exception as e:
+            print('remove sip', e)
 
-    with TarFile.open('src/sip-4.19.18.tar.gz', 'r:*') as tf:
-        tf.extractall(path='src')
+        with TarFile.open('src/sip-4.19.18.tar.gz', 'r:*') as tf:
+            tf.extractall(path='src')
 
-    print('extractall sip ok')
+        print('extractall sip ok')
 
     # 切换目录
     os.chdir('src/sip-4.19.18')
@@ -69,8 +69,7 @@ def buildSip():
     try:
         retcode = subprocess.check_call(
             sys.executable +
-            ' configure.py && {0} && {1} {0} install'.format(
-                make, 'sudo' if args.sudo else ''),
+            ' configure.py && {0}'.format(make),
             shell=True, stderr=subprocess.STDOUT
         )
         print('retcode:', retcode)
@@ -83,21 +82,23 @@ def buildSip():
 
 def buildPyQt5():
     # 编译PyQt5 QtWebkit
-    try:
-        shutil.rmtree('PyQt5_gpl-5.13.0', ignore_errors=True)
-    except Exception as e:
-        print('remove PyQt5', e)
+    if args.delete:
+        try:
+            shutil.rmtree('PyQt5_gpl-5.13.0', ignore_errors=True)
+        except Exception as e:
+            print('remove PyQt5', e)
 
-    with TarFile.open('src/PyQt5_gpl-5.13.0.tar.gz', 'r:*') as tf:
-        tf.extractall(path='src')
+        with TarFile.open('src/PyQt5_gpl-5.13.0.tar.gz', 'r:*') as tf:
+            tf.extractall(path='src')
 
-    print('extractall PyQt5 ok')
+        print('extractall PyQt5 ok')
 
     os.chdir('src/PyQt5_gpl-5.13.0')
 
     try:
         cmd = '{0} configure.py ' \
               '--confirm-license ' \
+              '--verbose ' \
               '--no-designer-plugin ' \
               '--no-qml-plugin ' \
               '--disable=dbus ' \
