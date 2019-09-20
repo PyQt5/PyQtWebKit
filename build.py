@@ -164,9 +164,11 @@ def buildPyQt5():
               '--disable=_QOpenGLFunctions_ES2 ' \
               '--disable=pylupdate ' \
               '--disable=pyrcc ' \
-              '--sip={1} ' \
-              '{2} && {3} -j 8'.format(
+              '--sip-incdir={1} ' \
+              '--sip={2} ' \
+              '{3} && {4} -j 8'.format(
                   sys.executable,
+                  os.path.abspath('../sip-4.19.18/siplib/'),
                   os.path.abspath(
                       '../sip-4.19.18/sipgen/sip{0}'.format(
                           '.exe' if args.platform == 'Windows' else '')),
