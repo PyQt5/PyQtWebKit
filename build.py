@@ -27,29 +27,25 @@ parser.add_argument('-p', '--platform', default=None,
                     choices=['Windows', 'Linux'],
                     required=True, help='System platform')
 parser.add_argument('-a', '--arch', default=None, type=str.lower,
-                    metavar='[x86 or x64]',
-                    choices=['x86', 'x64'],
+                    metavar='[x86 or x64]', choices=['x86', 'x64'],
                     required=True, help='System Arch')
 parser.add_argument('-b', '--build', default=None,
-                    metavar='[sip or PyQt5]',
-                    required=True, help='Build Target')
-parser.add_argument('--sipver', default=None,
-                    required=True, help='sip version')
-parser.add_argument('--pyqtver', default=None,
-                    required=True, help='pyqt5 version')
+                    metavar='[sip or PyQt5]', required=True, help='Build Target')
+parser.add_argument('--sipver', default=None, type=str.lower, help='sip version')
+parser.add_argument('--pyqtver', default=None, type=str.lower, help='pyqt5 version')
 parser.add_argument('--qmake', default='', help='qmake tools')
-parser.add_argument('--delete', default='True',
-                    type=str, help='Delete src files')
+parser.add_argument('--delete', default='True', type=str, help='Delete src files')
 
 args = parser.parse_args()
 
-assert args.build in ('sip', 'PyQt5')
 if args.build == 'sip':
     assert args.sipver is not None
     print('sip version:', args.sipver)
-elif args.build == 'PyQt5':
+elif args.build == 'pyqt5':
     assert args.pyqtver is not None
     print('PyQt5 version:', args.pyqtver)
+else:
+    assert Exception('sip version or PyQt5 version is required')
 
 print('Platform:', args.platform)
 print('Arch:', args.arch)
