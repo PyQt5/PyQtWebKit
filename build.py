@@ -14,8 +14,8 @@ import os
 import shutil
 import subprocess
 import sys
+import urllib
 from tarfile import TarFile
-
 
 __Author__ = 'Irony'
 __Copyright__ = 'Copyright (c) 2019 Irony'
@@ -33,12 +33,23 @@ parser.add_argument('-a', '--arch', default=None, type=str.lower,
 parser.add_argument('-b', '--build', default=None,
                     metavar='[sip or PyQt5]',
                     required=True, help='Build Target')
+parser.add_argument('--sipver', default=None,
+                    required=True, help='sip version')
+parser.add_argument('--pyqtver', default=None,
+                    required=True, help='pyqt5 version')
 parser.add_argument('--qmake', default='', help='qmake tools')
-parser.add_argument('--delete', default='True', type=str, help='Delete src files')
+parser.add_argument('--delete', default='True',
+                    type=str, help='Delete src files')
 
 args = parser.parse_args()
 
-assert args.build is not None
+assert args.build in ('sip', 'PyQt5')
+if args.build == 'sip':
+    assert args.sipver is not None
+    print('sip version:', args.sipver)
+elif args.build == 'PyQt5':
+    assert args.pyqtver is not None
+    print('PyQt5 version:', args.pyqtver)
 
 print('Platform:', args.platform)
 print('Arch:', args.arch)
@@ -50,21 +61,34 @@ print('Build:', args.build)
 print('Qmake:', args.qmake)
 print('Del:', args.delete)
 
+
 def buildSip():
     # 编译sip
     if args.delete:
         try:
-            shutil.rmtree('sip-4.19.18', ignore_errors=True)
+            shutil.rmtree('sip-{0}'.format(args.sipver), ignore_errors=True)
         except Exception as e:
             print('remove sip', e)
 
-        with TarFile.open('src/sip-4.19.18.tar.gz', 'r:*') as tf:
+        path = 'src/sip-{0}.tar.gz'.format(args.sipver)
+        if not os.path.exists(path):
+            def reporthook(a, b, c):
+                per = 100.0 * a * b / c
+                if per > 100:
+                    per = 100
+                print('download sip-%s.tar.gz %.2f%%' % (args.sipver, per))
+
+            urllib.request.urlretrieve(
+                'https://www.riverbankcomputing.com/static/Downloads/sip/{0}/sip-{0}.tar.gz'.format(args.sipver),
+                path, reporthook)
+
+        with TarFile.open(path, 'r:*') as tf:
             tf.extractall(path='src')
 
         print('extractall sip ok')
 
     # 切换目录
-    os.chdir('src/sip-4.19.18')
+    os.chdir('src/sip-{0}'.format(args.sipver))
 
     try:
         retcode = subprocess.check_call(
@@ -84,16 +108,28 @@ def buildPyQt5():
     # 编译PyQt5 QtWebkit
     if args.delete:
         try:
-            shutil.rmtree('PyQt5_gpl-5.13.0', ignore_errors=True)
+            shutil.rmtree('PyQt5_gpl-{0}'.format(args.pyqtver), ignore_errors=True)
         except Exception as e:
             print('remove PyQt5', e)
 
-        with TarFile.open('src/PyQt5_gpl-5.13.0.tar.gz', 'r:*') as tf:
+        path = 'src/PyQt5_gpl-{0}.tar.gz'.format(args.pyqtver)
+        if not os.path.exists(path):
+            def reporthook(a, b, c):
+                per = 100.0 * a * b / c
+                if per > 100:
+                    per = 100
+                print('download PyQt5_gpl-%s.tar.gz %.2f%%' % (args.pyqtver, per))
+
+            urllib.request.urlretrieve(
+                'https://www.riverbankcomputing.com/static/Downloads/PyQt5/{0}/PyQt5_gpl-{0}.tar.gz'.format(
+                    args.pyqtver), path, reporthook)
+
+        with TarFile.open('src/PyQt5_gpl-{0}.tar.gz'.format(args.pyqtver), 'r:*') as tf:
             tf.extractall(path='src')
 
         print('extractall PyQt5 ok')
 
-    os.chdir('src/PyQt5_gpl-5.13.0')
+    os.chdir('src/PyQt5_gpl-{0}'.format(args.pyqtver))
 
     try:
         cmd = '{0} configure.py ' \
@@ -167,15 +203,15 @@ def buildPyQt5():
               '--sip-incdir={1} ' \
               '--sip={2} ' \
               '{3} && {4} -j 8'.format(
-                  sys.executable,
-                  os.path.abspath('../sip-4.19.18/siplib/'),
-                  os.path.abspath(
-                      '../sip-4.19.18/sipgen/sip{0}'.format(
-                          '.exe' if args.platform == 'Windows' else '')),
-                  '--qmake={}'.format(args.qmake) if args.qmake else '',
-                  os.path.abspath(
-                      '../../tools/jom.exe') if args.platform == 'Windows' else 'make'
-              )
+            sys.executable,
+            os.path.abspath('../sip-{0}/siplib/'.format(args.sipver)),
+            os.path.abspath(
+                '../sip-{0}/sipgen/sip{1}'.format(args.sipver,
+                                                  '.exe' if args.platform == 'Windows' else '')),
+            '--qmake={}'.format(args.qmake) if args.qmake else '',
+            os.path.abspath(
+                '../../tools/jom.exe') if args.platform == 'Windows' else 'make'
+        )
         print('cmd:', cmd)
         retcode = subprocess.check_call(
             cmd,

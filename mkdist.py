@@ -38,6 +38,7 @@ parser.add_argument('-t', '--tags', default=['cp35', 'cp36', 'cp37', 'cp38'], na
 args = parser.parse_args()
 
 assert args.version != None
+
 print('Platform:', args.platform)
 print('Arch:', args.arch)
 print('Version:', args.version)

@@ -1,59 +1,54 @@
-version: 5.13.0.{build}
+version: 5.13.1.{build}
 skip_non_tags: true
+max_jobs: 12
 cache:
   - Windows
   - Linux
   - tools
-  - src -> PyQt5_gpl-5.13.0.tar.gz, sip-4.19.18.tar.gz
+  - src
 environment:
   matrix:
   - PYTHON: C:\Python35
     TAG: cp35
-    VERSION: 5.13.0
     PLATFORM: x86
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
+    QTDIR: "C:\\Qt\\5.13.0\\msvc2017"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python35-x64
     TAG: cp35
-    VERSION: 5.13.0
     PLATFORM: x64
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017_64"
+    QTDIR: "C:\\Qt\\5.13.0\\msvc2017_64"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python36
     TAG: cp36
-    VERSION: 5.13.0
     PLATFORM: x86
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
+    QTDIR: "C:\\Qt\\5.13.0\\msvc2017"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python36-x64
-    VERSION: 5.13.0
     TAG: cp36
     PLATFORM: x64
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017_64"
+    QTDIR: "C:\\Qt\\5.13.0\\msvc2017_64"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python37
     TAG: cp37
-    VERSION: 5.13.0
     PLATFORM: x86
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017"
+    QTDIR: "C:\\Qt\\5.13.0\\msvc2017"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python37-x64
     TAG: cp37
-    VERSION: 5.13.0
     PLATFORM: x64
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    QTDIR: "C:\\Qt\\%VERSION%\\msvc2017_64\\"
+    QTDIR: "C:\\Qt\\5.13.0\\msvc2017_64\\"
     PATH: "%QTDIR%bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 build_script:
 - cmd: >-
@@ -65,21 +60,22 @@ build_script:
 
     xcopy "Windows\%PLATFORM%\PyQt5\Qt\*" %QTDIR% /S /E /Y /D
 
-    echo "python build.py --platform=Windows --arch=%PLATFORM% --build=sip"
+    echo "python build.py --platform=Windows --arch=%PLATFORM% --build=sip --sipver=4.19.19"
 
-    python build.py --platform=Windows --arch=%PLATFORM% --build=sip
+    python build.py --platform=Windows --arch=%PLATFORM% --build=sip --sipver=4.19.19
 
-    echo "python build.py --platform=Windows --arch=%PLATFORM% --build=PyQt5"
+    echo "python build.py --platform=Windows --arch=%PLATFORM% --build=PyQt5 --pyqtver=5.13.1"
 
-    python build.py --platform=Windows --arch=%PLATFORM% --build=PyQt5
+    python build.py --platform=Windows --arch=%PLATFORM% --build=PyQt5 --pyqtver=5.13.1
 test_script:
 - cmd: >-
-    echo "python mkdist.py --platform=Windows --arch=%PLATFORM% --version=%VERSION% --tags=%TAG%"
+    echo "python mkdist.py --platform=Windows --arch=%PLATFORM% --version=5.13.1 --tags=%TAG%"
 
-    python mkdist.py --platform=Windows --arch=%PLATFORM% --version=%VERSION% --tags=%TAG%
+    python mkdist.py --platform=Windows --arch=%PLATFORM% --version=5.13.1 --tags=%TAG%
 
-    echo "python test.py --platform=Windows --arch=%PLATFORM% --version=%VERSION% --tags=%TAG%"
+    echo "python test.py --platform=Windows --arch=%PLATFORM% --version=5.13.1 --tags=%TAG%"
 
-    python test.py --platform=Windows --arch=%PLATFORM% --version=%VERSION% --tags=%TAG%
+    python test.py --platform=Windows --arch=%PLATFORM% --version=5.13.1 --tags=%TAG%
 
-    python -m twine upload dist/* -u %PYPIUSER% -p %PYPIPASSORD%
+deploy_script:
+- cmd: python -m twine upload dist/* -u %PYPIUSER% -p %PYPIPASSORD%

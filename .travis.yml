@@ -42,7 +42,7 @@ script:
   - export PATH=$HOME/Qt/Qt5.13.1/5.13.1/gcc_64/bin/:$PATH
   - echo $PATH
   - echo "build PyQtWebKit"
-  - python3 build.py --platform=Linux --arch=x64 --build=sip --sudo=true
-  - python3 build.py --platform=Linux --arch=x64 --build=PyQt5
-  - python3 mkdist.py --platform=Linux --arch=x64 --version=5.13.0
-  - python3 test.py --platform=Linux --arch=x64 --version=5.13.0
+  - python3 build.py --platform=Linux --arch=x64 --build=sip --sipver=4.19.19 --sudo=true
+  - python3 build.py --platform=Linux --arch=x64 --build=PyQt5 --pyqtver=5.13.1
+  - python3 mkdist.py --platform=Linux --arch=x64 --version=5.13.1
+  - python3 test.py --platform=Linux --arch=x64 --version=5.13.1

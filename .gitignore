@@ -3,3 +3,4 @@ sip-4.19.18
 *.pyc
 *.pyo
 dist
+.idea
