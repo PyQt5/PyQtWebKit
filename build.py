@@ -14,7 +14,7 @@ import os
 import shutil
 import subprocess
 import sys
-import urllib
+import urllib.request
 from tarfile import TarFile
 
 __Author__ = 'Irony'
@@ -57,6 +57,8 @@ print('Build:', args.build)
 print('Qmake:', args.qmake)
 print('Del:', args.delete)
 
+os.makedirs('src', exist_ok=True)
+
 
 def buildSip():
     # 编译sip
@@ -67,16 +69,16 @@ def buildSip():
             print('remove sip', e)
 
         path = 'src/sip-{0}.tar.gz'.format(args.sipver)
-        if not os.path.exists(path):
-            def reporthook(a, b, c):
-                per = 100.0 * a * b / c
-                if per > 100:
-                    per = 100
-                print('download sip-%s.tar.gz %.2f%%' % (args.sipver, per))
 
-            urllib.request.urlretrieve(
-                'https://www.riverbankcomputing.com/static/Downloads/sip/{0}/sip-{0}.tar.gz'.format(args.sipver),
-                path, reporthook)
+        def reporthook(a, b, c):
+            per = 100.0 * a * b / c
+            if per > 100:
+                per = 100
+            print('download sip-%s.tar.gz %.2f%%' % (args.sipver, per))
+
+        urllib.request.urlretrieve(
+            'https://www.riverbankcomputing.com/static/Downloads/sip/{0}/sip-{0}.tar.gz'.format(args.sipver),
+            path, reporthook)
 
         with TarFile.open(path, 'r:*') as tf:
             tf.extractall(path='src')
@@ -109,16 +111,16 @@ def buildPyQt5():
             print('remove PyQt5', e)
 
         path = 'src/PyQt5_gpl-{0}.tar.gz'.format(args.pyqtver)
-        if not os.path.exists(path):
-            def reporthook(a, b, c):
-                per = 100.0 * a * b / c
-                if per > 100:
-                    per = 100
-                print('download PyQt5_gpl-%s.tar.gz %.2f%%' % (args.pyqtver, per))
 
-            urllib.request.urlretrieve(
-                'https://www.riverbankcomputing.com/static/Downloads/PyQt5/{0}/PyQt5_gpl-{0}.tar.gz'.format(
-                    args.pyqtver), path, reporthook)
+        def reporthook(a, b, c):
+            per = 100.0 * a * b / c
+            if per > 100:
+                per = 100
+            print('download PyQt5_gpl-%s.tar.gz %.2f%%' % (args.pyqtver, per))
+
+        urllib.request.urlretrieve(
+            'https://www.riverbankcomputing.com/static/Downloads/PyQt5/{0}/PyQt5_gpl-{0}.tar.gz'.format(
+                args.pyqtver), path, reporthook)
 
         with TarFile.open('src/PyQt5_gpl-{0}.tar.gz'.format(args.pyqtver), 'r:*') as tf:
             tf.extractall(path='src')

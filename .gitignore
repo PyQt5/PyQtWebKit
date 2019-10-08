@@ -4,3 +4,4 @@ sip-4.19.18
 *.pyo
 dist
 .idea
+src
