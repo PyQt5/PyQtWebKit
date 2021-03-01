@@ -4,6 +4,8 @@ cache:
   - Windows
   - Linux
   - tools
+image:
+  - Visual Studio 2019
 environment:
   matrix:
   - PYTHON: C:\Python38
@@ -37,6 +39,8 @@ environment:
 build_script:
 - cmd: >-
     "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %PLATFORM%
+
+    echo %PATH%
 
     python  --version
 
