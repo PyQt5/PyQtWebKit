@@ -11,28 +11,28 @@ environment:
     PLATFORM: x86
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    QTDIR: "C:\\Qt\\5.13.0\\msvc2017"
+    QTDIR: "C:\\Qt\\5.13.2\\msvc2017"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python38-x64
     TAG: cp38
     PLATFORM: x64
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    QTDIR: "C:\\Qt\\5.13.0\\msvc2017_64\\"
+    QTDIR: "C:\\Qt\\5.13.2\\msvc2017_64\\"
     PATH: "%QTDIR%bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python39
     TAG: cp39
     PLATFORM: x86
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    QTDIR: "C:\\Qt\\5.13.0\\msvc2017"
+    QTDIR: "C:\\Qt\\5.13.2\\msvc2017"
     PATH: "%QTDIR%\\bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - PYTHON: C:\Python39-x64
     TAG: cp39
     PLATFORM: x64
     DISTUTILS_USE_SDK: 1
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    QTDIR: "C:\\Qt\\5.13.0\\msvc2017_64\\"
+    QTDIR: "C:\\Qt\\5.13.2\\msvc2017_64\\"
     PATH: "%QTDIR%bin;%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 build_script:
 - cmd: >-
