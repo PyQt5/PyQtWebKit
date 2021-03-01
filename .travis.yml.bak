@@ -1,0 +1,48 @@
+language: python
+sudo: required
+dist: xenial
+python:
+  - "3.5"
+  - "3.6"
+  - "3.7"
+branches:
+  only:
+    - master
+notifications:
+  email:
+    recipients:
+      - 892768447@qq.com
+    on_success: change
+    on_failure: always
+cache:
+  apt: true
+  directories:
+  - "$HOME/.cache/pip"
+  - "$HOME/.pyenv"
+  - "$HOME/Qt"
+
+before_install:
+  - sed -i 's/\r$//' extract-qt-installer
+  - mkdir -p $HOME/Qt/Qt5.13.1
+  - chmod 755 extract-qt-installer
+  - sudo apt-get install libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev
+  - export QT_CI_PACKAGES=qt.qt5.5131.gcc_64
+
+install:
+  - if [ ! -f "$HOME/Qt/qt-opensource-linux-x64-5.13.1.run" ]; then wget -P $HOME/Qt -q http://download.qt.io/archive/qt/5.13/5.13.1/qt-opensource-linux-x64-5.13.1.run; fi
+  - if [ ! -d "$HOME/Qt/Qt5.13.1/5.13.1/gcc_64" ]; then ./extract-qt-installer $HOME/Qt/qt-opensource-linux-x64-5.13.1.run $HOME/Qt/Qt5.13.1; fi
+  - ls $HOME/Qt/Qt5.13.1
+  - cp -rf Linux/x64/PyQt5/Qt/* $HOME/Qt/Qt5.13.1/5.13.1/gcc_64/
+  - pip install PyQt5 twine -U
+
+before_script:
+  - export TZ='Asia/Shanghai'
+
+script:
+  - export PATH=$HOME/Qt/Qt5.13.1/5.13.1/gcc_64/bin/:$PATH
+  - echo $PATH
+  - echo "build PyQtWebKit"
+  - python3 build.py --platform=Linux --arch=x64 --build=sip --sipver=4.19.19 --pyqtver=5.13.1 --sudo=true
+  - python3 build.py --platform=Linux --arch=x64 --build=PyQt5 --sipver=4.19.19 --pyqtver=5.13.1
+  - python3 mkdist.py --platform=Linux --arch=x64 --version=5.13.1
+  - python3 test.py --platform=Linux --arch=x64 --version=5.13.1
