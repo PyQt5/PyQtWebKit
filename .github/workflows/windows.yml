@@ -22,12 +22,6 @@ jobs:
             qt_arch_install: msvc2019_64
     # 步骤
     steps:
-      # 安装Python
-      - name: Install Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.5.4'
-          architecture: '${{ matrix.msvc_arch }}'
       # 安装Qt
       - name: Install Qt5
         if: startsWith(matrix.qt_ver, '5')
@@ -49,12 +43,16 @@ jobs:
       - name: Build
         id: build
         shell: cmd
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.5.4'
+          architecture: '${{ matrix.msvc_arch }}'
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.msvc_arch }}
-          python build.py -p Windows -a x86 -b sip
-          python build.py -p Windows -a x86 -b PyQt5
-          python mkdist.py -p Windows -a x86 -v 5.15.2
-          python test.py -p Windows -a x86 -v 5.15.2
+          python build.py -p Windows -a ${{ matrix.msvc_arch }} -b sip
+          python build.py -p Windows -a ${{ matrix.msvc_arch }} -b PyQt5
+          python mkdist.py -p Windows -a ${{ matrix.msvc_arch }} -v 5.15.2
+          python test.py -p Windows -a ${{ matrix.msvc_arch }} -v 5.15.2
       # 下载
       - uses: actions/upload-artifact@v3
         with:
