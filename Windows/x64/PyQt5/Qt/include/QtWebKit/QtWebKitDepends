@@ -1,5 +1,0 @@
-#ifdef __cplusplus /* create empty PCH in C mode */
-#include <QtCore/QtCore>
-#include <QtGui/QtGui>
-#include <QtNetwork/QtNetwork>
-#endif
