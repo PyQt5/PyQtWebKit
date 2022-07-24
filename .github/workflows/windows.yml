@@ -1,0 +1,56 @@
+name: Windows
+on:
+  workflow_dispatch
+jobs:
+  build:
+    name: Build
+    # 运行平台， windows-latest目前是windows server 2019 
+    # 参考文档 https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md
+    runs-on: windows-2019
+    strategy:
+      # 矩阵配置
+      matrix:
+        include:
+          # 5.15.2
+          - qt_ver: 5.15.2
+            qt_arch: win32_msvc2019
+            msvc_arch: x86
+            qt_arch_install: msvc2019
+          - qt_ver: 5.15.2
+            qt_arch: win64_msvc2019_64
+            msvc_arch: x64
+            qt_arch_install: msvc2019_64
+    # 步骤
+    steps:
+      # 安装Qt
+      - name: Install Qt5
+        if: startsWith(matrix.qt_ver, '5')
+        # 使用外部action。这个action专门用来安装Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: ${{ matrix.qt_ver }}
+          arch: ${{ matrix.qt_arch }}
+          set-env: 'true'
+          aqtversion: '>=2.1.0'
+          py7zrversion: '>=0.18.9'
+      # 拉取代码
+      - uses: actions/checkout@v3
+        with:
+          ref: '5.15.2'
+          fetch-depth: 3
+          submodules: true
+      # 编译
+      - name: Build
+        id: build
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.msvc_arch }}
+          python build.py -p Windows -a x86 -b sip
+          python build.py -p Windows -a x86 -b PyQt5
+          python mkdist.py -p Windows -a x86 -v 5.15.2
+          python test.py -p Windows -a x86 -v 5.15.2
+      # 下载
+      - uses: actions/upload-artifact@v3
+        with:
+          name: PyQtWebKit_win_${{ matrix.qt_ver }}_${{ matrix.qt_arch }}
+          path: dist/**/*.whl
