@@ -65,6 +65,11 @@ print('Tags:', Tags)
 dist_info_dir = '{0}-{1}.dist-info'.format(Name, args.version)
 os.makedirs(dist_info_dir, exist_ok=True)
 
+# 修改so
+if args.platform == 'Linux':
+    os.system("chrpath -r '$ORIGIN/Qt/lib' ./tmp/PyQt5/QtWebKit.so")
+    os.system("chrpath -r '$ORIGIN/Qt/lib' ./tmp/PyQt5/QtWebKitWidgets.so")
+
 info_files = []
 # 遍历需要安装的文件
 pyqt_dir_path = 'tmp'
