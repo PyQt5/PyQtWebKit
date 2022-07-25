@@ -26,7 +26,7 @@ jobs:
       - name: Install Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.5'
+          python-version: '3.5.4'
           architecture: '${{ matrix.msvc_arch }}'
       # 安装Qt
       - name: Install Qt5
@@ -51,10 +51,12 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.msvc_arch }}
-          python build.py -p Windows -a ${{ matrix.msvc_arch }} -b sip
-          python build.py -p Windows -a ${{ matrix.msvc_arch }} -b PyQt5
-          python mkdist.py -p Windows -a ${{ matrix.msvc_arch }} -v 5.15.2
-          python test.py -p Windows -a ${{ matrix.msvc_arch }} -v 5.15.2
+          set PATH=C:\hostedtoolcache\windows\Python\3.5.4\${{ matrix.msvc_arch }};%PATH%
+          echo %PATH%
+          python3 build.py -p Windows -a ${{ matrix.msvc_arch }} -b sip
+          python3 build.py -p Windows -a ${{ matrix.msvc_arch }} -b PyQt5
+          python3 mkdist.py -p Windows -a ${{ matrix.msvc_arch }} -v 5.15.2
+          python3 test.py -p Windows -a ${{ matrix.msvc_arch }} -v 5.15.2
       # 下载
       - uses: actions/upload-artifact@v3
         with:
