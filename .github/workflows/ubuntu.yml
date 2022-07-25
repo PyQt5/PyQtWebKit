@@ -44,10 +44,10 @@ jobs:
           export pythonLocation=/opt/hostedtoolcache/Python/3.5.4/${{ matrix.msvc_arch }}/bin
           echo $PATH
           python3 -m pip install -U py7zr
-          python3 build.py -p Windows -a ${{ matrix.msvc_arch }} -b sip
-          python3 build.py -p Windows -a ${{ matrix.msvc_arch }} -b PyQt5
-          python3 mkdist.py -p Windows -a ${{ matrix.msvc_arch }} -v 5.15.2
-          python3 test.py -p Windows -a ${{ matrix.msvc_arch }} -v 5.15.2
+          python3 build.py -p Linux -a ${{ matrix.msvc_arch }} -b sip
+          python3 build.py -p Linux -a ${{ matrix.msvc_arch }} -b PyQt5
+          python3 mkdist.py -p Linux -a ${{ matrix.msvc_arch }} -v 5.15.2
+          python3 test.py -p Linux -a ${{ matrix.msvc_arch }} -v 5.15.2
       # 下载
       - uses: actions/upload-artifact@v3
         with:
