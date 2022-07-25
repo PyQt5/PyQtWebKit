@@ -4,12 +4,13 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-18.04
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        qt_ver: 5.15.2
-        qt_arch: gcc_64
-        msvc_arch: x64
+        os: [ubuntu-18.04]
+        qt_ver: [5.15.2]
+        qt_arch: [gcc_64]
+        msvc_arch: [x64]
     # 步骤
     steps:
       # 安装Python
