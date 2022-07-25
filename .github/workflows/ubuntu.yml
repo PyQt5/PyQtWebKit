@@ -39,6 +39,7 @@ jobs:
       - name: Build Qt
         id: build
         run: |
+          sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio -y
           sudo apt-get install libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev -y
           export PATH=/opt/hostedtoolcache/Python/3.5.4/${{ matrix.msvc_arch }}/bin:$PATH
           export pythonLocation=/opt/hostedtoolcache/Python/3.5.4/${{ matrix.msvc_arch }}/bin
