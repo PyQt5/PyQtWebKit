@@ -1,4 +1,4 @@
-name: Ubuntu
+name: MacOS
 on:
   workflow_dispatch
 jobs:
@@ -7,9 +7,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04]
+        os: [macos-10.15]
         qt_ver: [5.15.2]
-        qt_arch: [gcc_64]
+        qt_arch: [clang_64]
         msvc_arch: [x64]
     # 步骤
     steps:
@@ -39,7 +39,6 @@ jobs:
       - name: Build Qt
         id: build
         run: |
-          sudo apt-get install libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev -y
           export PATH=/opt/hostedtoolcache/Python/3.5.4/${{ matrix.msvc_arch }}/bin:$PATH
           export pythonLocation=/opt/hostedtoolcache/Python/3.5.4/${{ matrix.msvc_arch }}/bin
           echo $PATH
@@ -51,5 +50,5 @@ jobs:
       # 下载
       - uses: actions/upload-artifact@v3
         with:
-          name: PyQtWebKit_linux_${{ matrix.qt_ver }}_${{ matrix.qt_arch }}
+          name: PyQtWebKit_macos_${{ matrix.qt_ver }}_${{ matrix.qt_arch }}
           path: dist/**/*.whl
