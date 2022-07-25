@@ -52,7 +52,9 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" ${{ matrix.msvc_arch }}
           set PATH=C:\hostedtoolcache\windows\Python\3.5.4\${{ matrix.msvc_arch }};%PATH%
+          set pythonLocation=C:\hostedtoolcache\windows\Python\3.5.4\${{ matrix.msvc_arch }}
           echo %PATH%
+          python3 -m pip install -U py7zr
           python3 build.py -p Windows -a ${{ matrix.msvc_arch }} -b sip
           python3 build.py -p Windows -a ${{ matrix.msvc_arch }} -b PyQt5
           python3 mkdist.py -p Windows -a ${{ matrix.msvc_arch }} -v 5.15.2
