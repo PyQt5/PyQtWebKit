@@ -39,8 +39,8 @@ jobs:
       - name: Build Qt
         id: build
         run: |
-          export PATH=/opt/hostedtoolcache/Python/3.5.4/${{ matrix.msvc_arch }}/bin:$PATH
-          export pythonLocation=/opt/hostedtoolcache/Python/3.5.4/${{ matrix.msvc_arch }}/bin
+          export PATH=/Users/runner/hostedtoolcache/Python/3.5.4/${{ matrix.msvc_arch }}/bin:$PATH
+          export pythonLocation=/Users/runner/hostedtoolcache/Python/3.5.4/${{ matrix.msvc_arch }}/bin
           echo $PATH
           python3 -m pip install -U py7zr
           python3 build.py -p MacOS -a ${{ matrix.msvc_arch }} -b sip
