@@ -18,6 +18,7 @@ import shutil
 import subprocess
 import sys
 import urllib.request
+from pathlib import Path
 from py7zr import SevenZipFile
 from py7zr.callbacks import ExtractCallback
 from tarfile import TarFile
@@ -229,6 +230,13 @@ def buildPyQt5():
             tf.extractall(path='src')
 
         print('extractall PyQt5 ok')
+
+    # 拷贝补丁文件
+    print('src_dir:', src_dir)
+    for p in Path('patchs').rglob('*.sip'):
+        dfile = os.path.join(src_dir, str(p).replace('\\', '/')[7:])
+        print('copy', p, 'to', dfile)
+        shutil.copy(str(p), dfile)
 
     os.chdir(src_dir)
 
