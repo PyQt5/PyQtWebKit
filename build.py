@@ -161,7 +161,10 @@ def decompressLib():
     for d in paths:
         path = os.path.join('tmp/PyQt5/Qt', d)
         try:
-            shutil.rmtree(path, ignore_errors=True)
+            if os.path.isdir(path):
+                shutil.rmtree(path, ignore_errors=True)
+            else:
+                os.unlink(path)
         except Exception as e:
             print('remove ', path, e)
 
